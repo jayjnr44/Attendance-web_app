@@ -50,7 +50,7 @@ class Course(models.Model):
     
     def clean(self):
         #validation fo teacher's role
-        if self.Class_teacher and self.Class_teacher.role != 'teacher':
+        if self.Class_teacher and self.Class_teacher.role != 'Class teacher':
             raise ValidationError('Assigned Class teacher must have the role of "Class teacher".')
         
 class Attendance(models.Model):
@@ -113,5 +113,5 @@ class Attendance(models.Model):
                 raise ValidationError('Attendance can only be marked for students')
             
             #validate that marked_by is teacher or admin
-            if  self.marked_by and self.marked_by.role not in ['teacher', 'admin']:
+            if  self.marked_by and self.marked_by.role not in ['Class teacher', 'admin']:
                 raise ValidationError('Attendance can only be marked by Class teacher or admin')
