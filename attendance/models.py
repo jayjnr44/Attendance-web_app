@@ -49,6 +49,7 @@ class Course(models.Model):
         return self.students.count()
     
     def clean(self):
+        super().clean()
         #validation fo teacher's role
         if self.Class_teacher and self.Class_teacher.role != 'Class teacher':
             raise ValidationError('Assigned Class teacher must have the role of "Class teacher".')
@@ -108,6 +109,7 @@ class Attendance(models.Model):
             return f'{self.user.username} - {self.course.code} - {self.date} ({self.get_status_display()})'
         
         def clean(self):
+            super().clean()
             #validate that user is a student
             if self.user and self.user.role != 'student':
                 raise ValidationError('Attendance can only be marked for students')
