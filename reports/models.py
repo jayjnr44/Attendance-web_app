@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from attendance.models import Course
 
-class AttendaceReport(models.Model):
+class AttendanceReport(models.Model):
     """Stores metadata for generated attendance reports """
 
     REPORT_TYPE_CHOICES = [
@@ -49,7 +49,7 @@ class AttendaceReport(models.Model):
 
     def __str__(self):
         course_name =  self.course.code if self.course else 'All Courses'
-        return f'{self.get_report_type_display()}: {course_name} ({self.start_date} to {self.start_date} to {self.end_date})'
+        return f'{self.get_report_type_display()}: {course_name} ({self.start_date} to {self.end_date})'
     
     
     
