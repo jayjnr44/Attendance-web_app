@@ -8,7 +8,7 @@ from .views import (
     UserListView,
 )
 
-app_name = 'users'
+# app_name = 'users'
 
 urlpatterns = [
     # Authentication
