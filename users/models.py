@@ -20,6 +20,12 @@ class CustomUser(AbstractUser):
         unique=True,
         help_text='Email address of the user(must be unique)',
     )
+    phone = models.CharField(
+    max_length=15,
+    blank=True,
+    null=True,
+    help_text='Phone number of the user',
+)
     date_joined= models.DateTimeField(auto_now_add=True)
 
     class Meta:
