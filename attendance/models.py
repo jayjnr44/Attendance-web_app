@@ -105,15 +105,15 @@ class Attendance(models.Model):
             models.Index(fields=['user', 'date']),
         ]
 
-        def __str__(self):
-            return f'{self.user.username} - {self.course.code} - {self.date} ({self.get_status_display()})'
+    def __str__(self):
+        return f'{self.user.username} - {self.course.code} - {self.date} ({self.get_status_display()})'
+    
+    def clean(self):
+        super().clean()
+        #validate that user is a student
+        if self.user and self.user.role != 'student':
+            raise ValidationError('Attendance can only be marked for students')
         
-        def clean(self):
-            super().clean()
-            #validate that user is a student
-            if self.user and self.user.role != 'student':
-                raise ValidationError('Attendance can only be marked for students')
-            
-            #validate that marked_by is teacher or admin
-            if  self.marked_by and self.marked_by.role not in ['Class teacher', 'admin']:
-                raise ValidationError('Attendance can only be marked by Class teacher or admin')
+        #validate that marked_by is teacher or admin
+        if  self.marked_by and self.marked_by.role not in ['Class teacher', 'admin']:
+            raise ValidationError('Attendance can only be marked by Class teacher or admin')
