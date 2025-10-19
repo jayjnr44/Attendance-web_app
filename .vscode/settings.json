@@ -1,3 +1,26 @@
 {
-  "cSpell.words": ["simplejwt"]
+  "cSpell.words": [
+    "asgi",
+    "Browsable",
+    "createsuperuser",
+    "decoenv",
+    "djangorestframework",
+    "docstrings",
+    "findstr",
+    "htmlcov",
+    "jayjnr",
+    "makemigrations",
+    "openpyxl",
+    "psycopg",
+    "pytest",
+    "runserver",
+    "sdist",
+    "simplejwt",
+    "staticfiles",
+    "taskkill",
+    "timedelta",
+    "venv",
+    "virtualenv",
+    "wsgi"
+  ]
 }
