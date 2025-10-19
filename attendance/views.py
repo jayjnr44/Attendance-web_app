@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from django.db.models import Count, Q
 from datetime import datetime, timedelta
+from rest_framework.exceptions import PermissionDenied
 from .models import Course, Attendance
 from .serializers import (
     CourseSerializer,
@@ -46,7 +47,7 @@ class CourseListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Only admins can create courses
         if self.request.user.role != 'admin':
-            raise permissions.PermissionDenied("Only admins can create courses")
+            raise PermissionDenied("Only admins can create courses")
         serializer.save()
 
 
@@ -62,13 +63,13 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         # Only admins can update courses
         if self.request.user.role != 'admin':
-            raise permissions.PermissionDenied("Only admins can update courses")
+            raise PermissionDenied("Only admins can update courses")
         serializer.save()
     
     def perform_destroy(self, instance):
         # Only admins can delete courses
         if self.request.user.role != 'admin':
-            raise permissions.PermissionDenied("Only admins can delete courses")
+            raise PermissionDenied("Only admins can delete courses")
         instance.delete()
 
 
@@ -108,7 +109,7 @@ class AttendanceListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Only teachers and admins can mark attendance
         if self.request.user.role == 'student':
-            raise permissions.PermissionDenied("Students cannot mark attendance")
+            raise PermissionDenied("Students cannot mark attendance")
         serializer.save(marked_by=self.request.user)
 
 
@@ -134,12 +135,12 @@ class AttendanceDetailView(generics.RetrieveUpdateDestroyAPIView):
     
     def perform_update(self, serializer):
         if self.request.user.role == 'student':
-            raise permissions.PermissionDenied("Students cannot update attendance")
+            raise PermissionDenied("Students cannot update attendance")
         serializer.save(marked_by=self.request.user)
     
     def perform_destroy(self, instance):
         if self.request.user.role not in ['admin', 'teacher']:
-            raise permissions.PermissionDenied("Only teachers and admins can delete attendance")
+            raise PermissionDenied("Only teachers and admins can delete attendance")
         instance.delete()
 
 
