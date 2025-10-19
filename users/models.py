@@ -24,8 +24,8 @@ class CustomUser(AbstractUser):
     max_length=15,
     blank=True,
     null=True,
-    help_text='Phone number of the user',
-)
+    help_text='Contact or Phone number',
+    )
     date_joined= models.DateTimeField(auto_now_add=True)
 
     class Meta:
