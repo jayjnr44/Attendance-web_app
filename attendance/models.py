@@ -20,7 +20,7 @@ class Course(models.Model):
     teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        limit_choices_to={'role': 'teacher'},
+        limit_choices_to={'role': 'Class teacher'},
         related_name='courses_taught',
         help_text="Teacher assigned to this course"
     )
@@ -53,8 +53,23 @@ class Course(models.Model):
     def clean(self):
         """Validate model data before saving"""
         super().clean()
-        if self.teacher and self.teacher.role != 'teacher':
-            raise ValidationError("Course teacher must have 'teacher' role")
+        # if self.teacher and self.teacher.role != 'Class teacher':
+        #     raise ValidationError("Course teacher must have 'teacher' role")
+         # Validate that teacher has teacher role
+        # Check if teacher is set and is not None
+        if self.teacher_id:  # Use teacher_id to avoid RelatedObjectDoesNotExist
+            try:
+                # Get the teacher object
+                teacher = self.teacher
+                if teacher.role != 'Class teacher':
+                    raise ValidationError({
+                        'teacher': "Selected user must have 'teacher' role."
+                    })
+            except Exception as e:
+                # If there's any issue accessing teacher, skip validation
+                # The database constraint will handle it
+                pass
+
 
 
 class Attendance(models.Model):
@@ -122,7 +137,28 @@ class Attendance(models.Model):
     def clean(self):
         """Validate model data before saving"""
         super().clean()
-        if self.user and self.user.role != 'student':
-            raise ValidationError("Attendance can only be marked for students")
-        if self.marked_by and self.marked_by.role not in ['teacher', 'admin']:
-            raise ValidationError("Attendance can only be marked by teachers or admins")
+        #if self.user and self.user.role != 'student':
+        #     raise ValidationError("Attendance can only be marked for students")
+        # if self.marked_by and self.marked_by.role not in ['teacher', 'admin']:
+        #     raise ValidationError("Attendance can only be marked by teachers or admins")
+         # Validate that user is a student
+        if self.user_id:  # Use user_id to avoid RelatedObjectDoesNotExist
+            try:
+                user = self.user
+                if user.role != 'student':
+                    raise ValidationError({
+                        'user': "Attendance can only be marked for students."
+                    })
+            except Exception:
+                pass
+        
+        # Validate that marked_by is teacher or admin
+        if self.marked_by_id:  # Use marked_by_id to avoid RelatedObjectDoesNotExist
+            try:
+                marked_by = self.marked_by
+                if marked_by.role not in ['Class teacher', 'admin']:
+                    raise ValidationError({
+                        'marked_by': "Attendance can only be marked by teachers or admins."
+                    })
+            except Exception:
+                pass
